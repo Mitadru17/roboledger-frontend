@@ -1,6 +1,4 @@
-# FRONTEND ARCHITECTURE
-
-## FRONTEND POSITIONING
+# FRONTEND POSITIONING
 
 “An autonomous robotics command, trust, and mission intelligence platform.”
 
@@ -18,7 +16,8 @@ The frontend must feel:
 - highly synchronized
 
 
-## PRIMARY FRONTEND RESPONSIBILITIES
+
+# PRIMARY FRONTEND RESPONSIBILITIES
 
 The frontend is responsible for:
 
@@ -39,11 +38,11 @@ The frontend is responsible for:
 
 ---
 
-## FINAL FRONTEND ARCHITECTURE
+# FINAL FRONTEND ARCHITECTURE
 
 ```txt
 frontend-platform/
-
+│
 ├── app-shell/
 ├── dashboard-core/
 ├── mission-control/

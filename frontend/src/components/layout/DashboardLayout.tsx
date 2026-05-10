@@ -15,6 +15,7 @@ import {
 import { useWallet } from '@solana/wallet-adapter-react';
 import { WalletMultiButton } from '@solana/wallet-adapter-react-ui';
 import { clsx } from 'clsx';
+import { useTelemetrySocket } from '../../hooks/useTelemetrySocket';
 
 const NAVIGATION = [
   { name: 'Dashboard', path: '/dashboard', icon: LayoutDashboard },
@@ -31,6 +32,9 @@ export function DashboardLayout() {
   const location = useLocation();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
+  
+  // Initialize WebSocket connection for live telemetry
+  useTelemetrySocket();
 
   useEffect(() => {
     // Optionally redirect to landing if disconnected

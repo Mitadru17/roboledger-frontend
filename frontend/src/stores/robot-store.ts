@@ -6,7 +6,6 @@ interface RobotStore {
   addRobot: (robot: Robot) => void;
   updateRobot: (id: string, updates: Partial<Robot>) => void;
   setRobots: (robots: Robot[]) => void;
-  getRobotsArray: () => Robot[];
   updateTelemetry: (data: any) => void;
 }
 
@@ -29,7 +28,6 @@ export const useRobotStore = create<RobotStore>((set, get) => ({
     robotsList.forEach(r => robotsMap[r.id] = r);
     return { robots: robotsMap };
   }),
-  getRobotsArray: () => Object.values(get().robots),
   updateTelemetry: (data: any) => set((state) => {
     const updatedRobots = { ...state.robots };
     

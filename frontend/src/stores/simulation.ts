@@ -24,7 +24,9 @@ export function useSimulation() {
       reliabilityScore: 99.9,
       walletBalance: Math.random() * 100,
       efficiencyScore: Math.floor(Math.random() * 15) + 85,
-      systemHealth: 100
+      systemHealth: 100,
+      temperature: Math.floor(Math.random() * 20) + 30,
+      riskScore: Math.floor(Math.random() * 10),
     }));
     
     setRobots(initialRobots);
@@ -63,9 +65,21 @@ export function useSimulation() {
       const currentTasks = useTaskStore.getState().tasks;
 
       Object.values(currentRobots).forEach(robot => {
-        // Battery drain
-        if (robot.battery > 0 && Math.random() > 0.7) {
-            updateRobot(robot.id, { battery: Math.max(0, robot.battery - 0.5) });
+        // Battery drain & Temp fluctuation
+        if (Math.random() > 0.5) {
+            const batteryChange = robot.battery > 0 ? -0.2 : 0;
+            const tempChange = robot.state === 'IDLE' ? (robot.temperature > 30 ? -0.5 : 0.5) : 1.2;
+            const riskChange = robot.temperature > 80 ? 5 : (Math.random() > 0.9 ? 1 : -0.5);
+            
+            updateRobot(robot.id, { 
+                battery: Math.max(0, robot.battery + batteryChange),
+                temperature: Math.min(100, Math.max(25, robot.temperature + tempChange)),
+                riskScore: Math.min(100, Math.max(0, robot.riskScore + riskChange))
+            });
+
+            if (robot.temperature > 85) {
+                addLog({ type: 'WARNING', message: `CRITICAL TEMP: ${robot.id} at ${robot.temperature.toFixed(1)}°C`, source: 'HARDWARE' });
+            }
         }
 
         if (robot.state === 'IDLE') {
@@ -91,11 +105,11 @@ export function useSimulation() {
             const dy = robot.targetCoordinates.y - robot.coordinates.y;
             const dist = Math.sqrt(dx * dx + dy * dy);
             
-            if (dist < 10) {
+            if (dist < 15) {
               updateRobot(robot.id, { state: 'ANALYZING' });
               addLog({ type: 'INFO', message: `${robot.id} reached destination. Analyzing...`, source: robot.id });
             } else {
-              const speed = 15;
+              const speed = 25;
               updateRobot(robot.id, {
                 coordinates: {
                   x: robot.coordinates.x + (dx / dist) * speed,
@@ -105,33 +119,35 @@ export function useSimulation() {
             }
           }
         } else if (robot.state === 'ANALYZING') {
-          if (Math.random() > 0.5) {
+          if (Math.random() > 0.6) {
             updateRobot(robot.id, { state: 'VERIFYING' });
             if (robot.taskId) updateTask(robot.taskId, { status: 'VERIFYING' });
             addLog({ type: 'INFO', message: `${robot.id} requesting consensus verification.`, source: robot.id });
           }
         } else if (robot.state === 'VERIFYING') {
-          if (Math.random() > 0.5) {
+          if (Math.random() > 0.7) {
             updateRobot(robot.id, { state: 'SETTLING' });
             addLog({ type: 'SUCCESS', message: `${robot.id} proof verified by network.`, source: 'CONSENSUS' });
           }
         } else if (robot.state === 'SETTLING') {
           if (robot.taskId && currentTasks[robot.taskId]) {
             const reward = currentTasks[robot.taskId].rewardValue;
+            const proofId = `proof_v_${Math.random().toString(36).substring(7)}`;
             updateRobot(robot.id, { 
               state: 'IDLE', 
               taskId: null,
-              walletBalance: robot.walletBalance + reward
+              walletBalance: robot.walletBalance + reward,
+              lastProofId: proofId
             });
             updateTask(robot.taskId, { status: 'COMPLETED' });
             useProtocolStore.getState().updateNetworkStatus({
               totalSettlementVolume: useProtocolStore.getState().networkStatus.totalSettlementVolume + reward
             });
-            addLog({ type: 'SETTLEMENT', message: `${robot.id} received ${reward} RBL for task completion.`, source: 'BLOCKCHAIN' });
+            addLog({ type: 'SETTLEMENT', message: `SOLANA ANCHOR SUCCESS: ${proofId} (TX: sol_tx_${Math.random().toString(36).substring(7)})`, source: 'BLOCKCHAIN' });
           }
         }
       });
-    }, 1000);
+    }, 2000);
 
     return () => clearInterval(interval);
   }, []);

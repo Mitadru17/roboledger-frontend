@@ -59,7 +59,7 @@ export function TacticalRobotMap() {
           }
 
           const isActive = robot.state !== 'IDLE' && robot.state !== 'FAILED';
-          const isWarning = robot.battery < 20 || robot.state === 'FAILED';
+          const isWarning = robot.battery < 20 || robot.state === 'FAILED' || robot.temperature > 80;
 
           return (
             <React.Fragment key={robot.id}>

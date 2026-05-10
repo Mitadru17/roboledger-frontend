@@ -16,6 +16,7 @@ import { useWallet } from '@solana/wallet-adapter-react';
 import { WalletMultiButton } from '@solana/wallet-adapter-react-ui';
 import { clsx } from 'clsx';
 import { useTelemetrySocket } from '../../hooks/useTelemetrySocket';
+import { useSimulation } from '../../stores/simulation';
 
 const NAVIGATION = [
   { name: 'Dashboard', path: '/dashboard', icon: LayoutDashboard },
@@ -35,6 +36,7 @@ export function DashboardLayout() {
   
   // Initialize WebSocket connection for live telemetry
   useTelemetrySocket();
+  useSimulation();
 
   useEffect(() => {
     // Optionally redirect to landing if disconnected
@@ -104,7 +106,7 @@ export function DashboardLayout() {
       {/* Main Content */}
       <main className="flex-1 flex flex-col min-w-0 bg-background/50 h-screen overflow-hidden">
         {/* Top Header */}
-        <header className="h-16 flex items-center justify-between px-4 md:px-8 border-b border-border/50 bg-card/50 backdrop-blur-sm shrink-0">
+        <header className="h-16 flex items-center justify-between px-4 md:px-8 border-b border-border/50 bg-card/80 backdrop-blur-md shrink-0 relative z-50">
           <div className="flex items-center gap-3">
             <button 
               className="p-1 md:hidden text-muted-foreground hover:text-foreground"
@@ -125,7 +127,7 @@ export function DashboardLayout() {
             
             {/* Notifications Dropdown */}
             {isNotificationsOpen && (
-              <div className="absolute top-full right-0 mt-2 w-80 bg-card border border-border/50 rounded-xl shadow-xl z-50 overflow-hidden">
+              <div className="absolute top-full right-0 mt-2 w-80 bg-card/95 backdrop-blur-xl border border-border/50 rounded-xl shadow-2xl z-[60] overflow-hidden">
                 <div className="p-4 border-b border-border/50 flex justify-between items-center bg-secondary/30">
                   <h3 className="font-semibold">Notifications</h3>
                   <button 

@@ -79,4 +79,16 @@
   .neon-border-cyan {
     box-shadow: 0 0 15px rgba(0, 242, 254, 0.3);
   }
+
+  .glow-green {
+    text-shadow: 0 0 8px rgba(0, 230, 118, 0.6);
+  }
+
+  .glow-red {
+    text-shadow: 0 0 8px rgba(255, 23, 68, 0.6);
+  }
+
+  .glow-primary {
+    text-shadow: 0 0 8px rgba(0, 242, 254, 0.6);
+  }
 }

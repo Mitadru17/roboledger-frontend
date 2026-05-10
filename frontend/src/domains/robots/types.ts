@@ -20,4 +20,7 @@ export interface Robot {
   walletBalance: number;
   efficiencyScore: number;
   systemHealth: number;
+  temperature: number;
+  riskScore: number;
+  lastProofId?: string;
 }

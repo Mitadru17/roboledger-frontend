@@ -58,7 +58,10 @@ export const useRobotStore = create<RobotStore>((set, get) => ({
             reliabilityScore: 99.9,
             walletBalance: 0,
             efficiencyScore: 100,
-            systemHealth: 100
+            systemHealth: 100,
+            temperature: 35, // Default start temp
+            riskScore: 0,    // Default start risk
+            lastProofId: undefined
           };
         }
       });
